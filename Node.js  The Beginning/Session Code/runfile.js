@@ -1,4 +1,4 @@
-const operations = require("./modulesfile.js");
+const operations = require("./modulesfile.js"); // we need to user require keyword to import the module.
 
 console.log(operations.sub(1,2));
 console.log(operations.div(1,2));
