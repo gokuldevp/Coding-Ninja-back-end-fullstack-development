@@ -8,7 +8,12 @@ app.set("views", path.join(__dirname, "views"));    // setting up the template f
 
 
 app.get("/", (req, res) => {        
-    return res.render("home")    // renter the ejs file
+    // The file create a new object and add it as a variable to render
+    let homeVariables = {
+        title : "My Contact List",
+        heading: "My Contact Lists"
+    }
+    return res.render("home", homeVariables)    // renter the ejs file
 })
 
 

@@ -1,5 +1,6 @@
 # Debugging and Playing with EJS
 
+## Debugging
 ### For syntax error we will get the below information.
 1. Error line number
 2. error type
@@ -28,4 +29,27 @@ Node.js v18.16.1
 ### For Logical Error we can use a counsole log to print the logic in with the help of a variable
 ```
 console.log(logicVariable).
+```
+
+# Playing with EJS
+
+Making the ejs file dynamic
+
+Step 1: Create a new object and add it as a parameter in render.
+```
+app.get("/", (req, res) => {        
+    let homeVariables = {
+        title : "My Contact List",
+        heading: "My Contact Lists"
+    }
+    return res.render("home", homeVariables)
+})
+```
+
+Step 2: Use the variable in the ejs file to make that part dynamic
+
+```
+    <title>
+        <%= title %>
+    </title>
 ```
