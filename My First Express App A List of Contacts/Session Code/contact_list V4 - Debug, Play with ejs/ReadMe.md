@@ -37,13 +37,13 @@ Making the ejs file dynamic
 
 Step 1: Create a new object and add it as a parameter in render.
 ```
-app.get("/", (req, res) => {        
-    let homeVariables = {
-        title : "My Contact List",
-        heading: "My Contact Lists"
-    }
-    return res.render("home", homeVariables)
-})
+    app.get("/", (req, res) => {        
+        let homeVariables = {
+            title : "My Contact List",
+            heading: "My Contact Lists"
+        }
+        return res.render("home", homeVariables)
+    })
 ```
 
 Step 2: Use the variable in the ejs file to make that part dynamic
@@ -52,4 +52,34 @@ Step 2: Use the variable in the ejs file to make that part dynamic
     <title>
         <%= title %>
     </title>
+```
+
+Note: 
+1. If there is printing involved we need to use = 
+eg: <%= title %>
+2. Else just <%  %>
+
+Step 3: Create For loop.
+
+```
+<% for (let i=0; i<10; i++) {%>
+    <li>
+    <%= i%>
+    </li>
+    <%}%>
+```
+
+Step 4: Creating if condition.
+
+```
+    <% if (i%2===0) {%>
+    <li>
+        <%= i %> Even
+    </li>
+    <% } else { %>
+
+    <li>
+        <%= i %> Odd
+    </li>
+    <% } %>
 ```

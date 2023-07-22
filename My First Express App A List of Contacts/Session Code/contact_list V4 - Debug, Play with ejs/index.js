@@ -16,6 +16,14 @@ app.get("/", (req, res) => {
     return res.render("home", homeVariables)    // renter the ejs file
 })
 
+app.get("/pratice", (req, res)=> {
+    let practiceVariables = {
+        title: "PLAYGROUND",
+        heading: "Pratice with EJS"
+    };
+
+    return res.render("pratice", practiceVariables)
+})
 
 app.listen(port,(err)=>{
     if(err){
