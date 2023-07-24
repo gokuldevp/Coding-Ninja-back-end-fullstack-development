@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+</head>
+<body>
+    <nav>
+        <a href="add_contact.ejs"><%= nav_item[0] %> </a>
+    </nav>
+
+    <h1>
+     <%= heading %>   
+    </h1>
+
+    <ul>
+        <% contact_list.forEach((contact) => { %>
+            <li>
+                <p>Name: <%= contact.name %></p>
+                <p>Mobile: <%= contact.mobile %></p>
+                
+            </li>
+        <%})%>
+    </ul>   
+
+    <!-- <ul>
+        <% for (let i of contact_list) { %>
+            <li>
+                <p>Name: <%= i.name %></p>
+                <p>Mobile: <%= i.mobile %></p>
+            </li>
+        <%}%>
+    </ul>   -->
+
+</body>
+</html>
