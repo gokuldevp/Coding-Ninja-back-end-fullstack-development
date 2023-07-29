@@ -1,0 +1,68 @@
+/* Styles for the navigation menu */
+nav {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Styles for the main heading */
+#main-heading {
+    text-align: center;
+    color: blue;
+}
+
+/* Styles for the form container */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Styles for the form elements */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 300px;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+button[type="submit"] {
+    width: 200px;
+    padding: 8px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+button[type="submit"]:focus {
+    outline: none;
+}
+
+/* Optional: Add some spacing between form elements */
+input:not(:last-child) {
+    margin-bottom: 10px;
+}

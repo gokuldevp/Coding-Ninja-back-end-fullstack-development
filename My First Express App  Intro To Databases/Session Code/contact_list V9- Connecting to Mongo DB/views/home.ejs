@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+
+
+    <ul id="contact-list">
+        <h1 id="main-heading">
+            <%= heading %>   
+           </h1>
+        <% contact_list.forEach((contact) => { %>
+            <li class="contact">
+                <table>
+                    <tr>
+                        <td><%= contact.name %></td>
+                        <td class="mobile"><%= contact.mobile %></td>
+                            <td class="delete-btn">
+                                <a href="/delete-contact/<%= contact._id %>">
+                                    <i class="fa fa-trash red"></i>
+                                </a>
+                            </td>
+                    </tr>
+                </table>
+            </li>
+        <%})%>
+        <div class="add-btn"><a href="add_contact.ejs"><%= nav_item[0] %> </a></div>
+    </ul>   
+    
+    <script src="/js/home.js"></script>
+</body>
+</html>
