@@ -7,6 +7,9 @@ const port = 8000;
 // Create the Express app.
 const app = express();
 
+// import mongoose from the mongoose.js file
+const db = require('./config/mongoose');
+
 // Using the middleware 'express.static' handles serving static files in Express, Serving static files from the 'assets' directory 
 app.use(express.static('./assets'));
 
