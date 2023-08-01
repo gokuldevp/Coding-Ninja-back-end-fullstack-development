@@ -109,12 +109,12 @@ module.exports.home = (req, res) => {
 
 ## Layouts and partials in Views.
 
-### Layouts - [Documentation](https://ejs.co/) 
+### Layouts - [Layouts Documentation](https://www.npmjs.com/package/express-ejs-layouts) 
 * also known as templates or master views, are the overall structure or skeleton of a web page.
 * They define the common structure and elements that are consistent across multiple pages of a website.
 * A layout typically contains the header, footer, navigation menu, and any other elements that are present on most or all pages of the site.
 
-### Partials -  [Documentation](https://ejs.co/) 
+### Partials -  [Partails Documentation](https://ejs.co/) 
 * Partials, also known as partial views or includes, are smaller, reusable components of a web page that can be embedded within other views or layouts
 * Partials typically represent specific sections or elements of a page that are shared across multiple pages but are not the entire page itself
 * Examples of partials include navigation bars, sidebars, widgets, or any other content that appears on multiple pages.
@@ -135,10 +135,35 @@ module.exports.home = (req, res) => {
 ```
 
 14. Step 14: = Setting Up EJS Layouts
--> Install layouts library `npm install express-ejs-layouts`
--> Require the express-ejs-layouts library in the main index.js file
--> Using the Use keyword
+* Install layouts library `npm install express-ejs-layouts`
+* Require the express-ejs-layouts library in the main index.js file
+* Using the Use keyword
 ```
 const expressLayouts = require("express-ejs-layouts");
 app.use(expressLayouts)
 ```
+* create a new ejs file in views folder named layout.ejs
+```
+|
+|_Views
+    |_layout.ejs
+```
+* Create the layout file and add <%- body -%> for adding the content of the file.
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title%></title>
+</head>
+<body>
+    <%- include('_header'); -%>
+
+    <%- body -%>
+    
+    <%- include('_footer') -%>
+</body>
+</html>
+```
+* Remove the redundant part from the other
