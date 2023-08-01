@@ -14,6 +14,9 @@ app.use(express.static('./assets'));
 const expressLayouts = require("express-ejs-layouts");
 //Using express-ejs-layouts middleware
 app.use(expressLayouts)
+// Extrect style and script from subpages in to te layouts
+app.set('layout extractStyles', true)
+app.set('layout extractScripts', true)
 
 // Use the routes defined in the './routes' file for all incoming requests at the root path ('/').
 app.use('/', require('./routes'));

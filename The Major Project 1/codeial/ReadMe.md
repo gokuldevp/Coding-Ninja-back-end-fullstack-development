@@ -179,3 +179,34 @@ app.use(express.static('./assets'));
 ```
 <link rel="stylesheet" href="/css/layout.css">
 ```
+
+16. Handling Static file for pages
+* add the app.set() to extract the style and script subpages into the layout - in the index.js file
+* Note: They needed to be added below app.use(expressLayouts)
+```
+app.set('layout extractStyles', true)
+app.set('layout extractScripts', true)
+```
+* Create a new css file for a page and link it to the respective ejs page
+* go to the layout.ejs and add <%- style %> and <%- script %> in the respective places
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title%></title>
+    <link rel="stylesheet" href="/css/layout.css">
+    <%- style %>
+</head>
+<body>
+    <%- include('_header'); -%>
+
+    <%- body -%>
+    
+    <%- include('_footer') -%>
+
+    <%- script %>
+</body>
+</html>
+```
