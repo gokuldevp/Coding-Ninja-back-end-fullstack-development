@@ -137,7 +137,7 @@ module.exports.home = (req, res) => {
 14. Step 14: = Setting Up EJS Layouts
 * Install layouts library `npm install express-ejs-layouts`
 * Require the express-ejs-layouts library in the main index.js file
-* Using the Use keyword
+* Using the Use keyword - need to be used before the views
 ```
 const expressLayouts = require("express-ejs-layouts");
 app.use(expressLayouts)
@@ -166,4 +166,16 @@ app.use(expressLayouts)
 </body>
 </html>
 ```
-* Remove the redundant part from the other
+* Remove the redundant part from the other ejs file.
+
+15. Setup static file
+* Create a new folder named assets
+* Create new sub folders named js, css and images. 
+* Using the middleware 'express.static' handles serving static files in Express, Serving static files from the 'assets' directory 
+```
+app.use(express.static('./assets'));
+```
+* Create a new file called layout.css and add it as a style sheet in layout.ejs file and test it out.
+```
+<link rel="stylesheet" href="/css/layout.css">
+```

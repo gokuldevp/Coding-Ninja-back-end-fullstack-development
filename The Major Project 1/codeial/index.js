@@ -7,7 +7,12 @@ const port = 8000;
 // Create the Express app.
 const app = express();
 
+// Using the middleware 'express.static' handles serving static files in Express, Serving static files from the 'assets' directory 
+app.use(express.static('./assets'));
+
+// Import the 'express-ejs-layouts' module to assess the layout file
 const expressLayouts = require("express-ejs-layouts");
+//Using express-ejs-layouts middleware
 app.use(expressLayouts)
 
 // Use the routes defined in the './routes' file for all incoming requests at the root path ('/').
