@@ -4,8 +4,8 @@
 2. Step 2: = in the terminal enter 'npm init' and give proper details
 3. Step 3: = Create New folders using 'mkdir routes controllers views models config' in the cmd
 4. Step 4: = Starting Express
--> npm install express in terminal
--> Require the express library in the index.js file and setting up the express
+* npm install express in terminal
+* Require the express library in the index.js file and setting up the express
 ```
 const express = require('express');
 const app = express()
@@ -43,15 +43,15 @@ package-lock.json
 ```
 
 7. Step 7: = Set up git and the file to git repository
--> git init
--> git add .
--> git commit -m "Initial commit"
--> git remote add origin https://github.com/yourusername/your-repo.git
--> git push -u origin master
+* git init
+* git add .
+* git commit -m "Initial commit"
+* git remote add origin https://github.com/yourusername/your-repo.git
+* git push -u origin master
 
 8. Step 8: = Setup the express router - https://expressjs.com/en/guide/routing.html 
--> Create a new index.js file in routes folder
--> Add the code for creating router
+* Create a new index.js file in routes folder
+* Add the code for creating router
 ```
 const express = require('express');
 const router = express.Router();
@@ -66,21 +66,21 @@ app.use("/", require('./routes'))
 ```
 
 9. Step 9: = Setup the express controller 
--> Create a new home_controller.js file in controller foler
--> Create controller functions using the below syntax in home_controller.js
+* Create a new home_controller.js file in controller foler
+* Create controller functions using the below syntax in home_controller.js
 ```
 module.exports.actionName = function (req, res) => {};
 ```
--> call the home controller file in the routes/index.js and use the route.get() method
+* call the home controller file in the routes/index.js and use the route.get() method
 ```
 const homeController = require('../controllers/home_controller')
 router.get("/", homeController.home);
 ```
 
 10. Step 10: = Handling multiple routers and controllers
--> create a new router in routes folder
--> Create a new controller in the controller folder
--> in the index.js file in the routes use the router.use() method to access the new router created
+* create a new router in routes folder
+* Create a new controller in the controller folder
+* in the index.js file in the routes use the router.use() method to access the new router created
 ```
 router.use("/routerName", require("./routerfile"))
 ```
@@ -90,8 +90,8 @@ router.use('/users', require('./users'));
 ```
 
 11. Step 11: = Install EJS and Setupu View engine.
--> npm install ejs
--> in the main index.js folder setup view engine and the view folder
+* npm install ejs
+* in the main index.js folder setup view engine and the view folder
 ```
 app.set('view engine', 'ejs');
 app.set('views', './views');
@@ -120,9 +120,9 @@ module.exports.home = (req, res) => {
 * Examples of partials include navigation bars, sidebars, widgets, or any other content that appears on multiple pages.
 
 13. Step 13: = Setting up Partials
--> Create the partials ejs file in the views folder eg: _header.ejs
--> Use the <%- include('filename') -%> keyword to add the partial in other ejs file
--> Note: it is not necessary to use _ for partial file name, but used to understand it's a partial
+* Create the partials ejs file in the views folder eg: _header.ejs
+* Use the <%- include('filename') -%> keyword to add the partial in other ejs file
+* Note: it is not necessary to use _ for partial file name, but used to understand it's a partial
 ```
 <%- include('_header'); -%>
 <h1>
