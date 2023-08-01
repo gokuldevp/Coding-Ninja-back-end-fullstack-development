@@ -84,6 +84,10 @@ router.get("/", homeController.home);
 ```
 router.use("/routerName", require("./routerfile"))
 ```
+example:
+```
+router.use('/users', require('./users'));
+```
 
 11. Install EJS and Setupu View engine.
 -> npm install ejs
