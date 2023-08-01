@@ -1,3 +1,6 @@
 module.exports.home = async (req, res) => {
-    return res.render("home");
+    let homeVariables = {
+        title: 'Codeial'
+    }
+    return res.render("home", homeVariables);
 }
