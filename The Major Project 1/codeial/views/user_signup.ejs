@@ -1,0 +1,13 @@
+
+<h1><%= title%></h1>
+<form action="/users/create" method="post">
+    <label for="name">Enter Your Name: </label>
+    <input type="text" name="name" id="name" required>
+    <label for="email">Enter Your Email: </label>
+    <input type="email" name="email" id="email" required>
+    <label for="password">Enter Your Password: </label>
+    <input type="password" name="password" id="password" required>
+    <label for="confirmpassword">Confirm Your Password: </label>
+    <input type="password" name="confirmpassword" id="confirmpassword" required>
+    <button type="submit">Sign in</button>
+</form>

@@ -236,3 +236,80 @@ db.once("open", function() {
 // Exporting the 'db' connection for use in other parts of the application
 module.exports = db;
 ```
+
+## Manual Authentication
+
+* Step 1: Create a new model in model folder: eg : user.js
+* Step 2: Setting up the user schema
+```
+const mongoose = require('mongoose');
+
+const userSchema = mongoose.Schema({    // Creating a new Schema
+    email: {
+        type: string,       // set the type as string
+        required: true,     // make the attribute as manditory
+        unique: true,       // make the attribute unique(no dublicates are allowed)
+    },
+    password: {
+        type: string,
+        required: true,
+    },
+    name: {
+        type: string,
+        required: true,
+    },
+}, {
+    timestamps: true,        //automatically create create at and updated at fields
+});
+
+
+const User = mongoose.model('User',userSchema);     // Create a new model using the user schema
+
+module.exports = User;
+```
+
+* Step 3: Setup and render the sign-in and sign-up pages
+-> Create the user_signup.ejs and user_signin.ejs in the views folder
+-> Create the Actions for the both in the users_controller
+```
+module.exports.signin = async (req, res) => {
+    let signinVariables = {
+        title: 'Codeial | SIGN IN'
+    }
+    return res.render("user_signin", signinVariables);
+}
+
+module.exports.signup = async (req, res) => {
+    let signupVariables = {
+        title: 'Codeial | SIGN UP'
+    }
+    return res.render("user_signup", signupVariables);
+}
+```
+-> Route the actions in the users_router
+```
+router.get('/sign-up', usersController.signup);
+
+router.get('/sign-in', usersController.signin);
+```
+
+* Step 4: Setup the sign-in and sign-up post requrest
+-> Create the forms in the ejs file
+-> Create the action skelton in users_controllers.js
+```
+// Handing User Signup
+module.exports.create = async (req, res) => {
+    //To Do Later
+}
+
+// Handing User Signin
+module.exports.createSession = async (req, res) => {
+    //To Do Later
+}
+```
+-> Router the actions in the users_router
+```
+router.post('/create', usersController.signUp);
+
+router.post('create-session', usersController.signIn);
+```
