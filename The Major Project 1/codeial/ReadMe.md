@@ -246,16 +246,16 @@ const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({    // Creating a new Schema
     email: {
-        type: string,       // set the type as string
+        type: String,       // set the type as string
         required: true,     // make the attribute as manditory
         unique: true,       // make the attribute unique(no dublicates are allowed)
     },
     password: {
-        type: string,
+        type: String,
         required: true,
     },
     name: {
-        type: string,
+        type: String,
         required: true,
     },
 }, {
@@ -323,7 +323,7 @@ const cookieParser = require('cookie-parser');
 ```
 3. Step 3: use the urlencoded and cookieParser as middleware
 ```
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended: true}));
 app.use(cookieParser())
 ```
 
@@ -331,3 +331,58 @@ note:
 * we can user console.log(req.cookies); in the action to log the cookies
 * We can change the value of the cookies at the server using res.cookies('cookie name', value);
 ======================================================================================
+
+## Manual Authentication - Continues
+
+5. Step 5: Handle User SignUp for post request in the user controller
+```
+// Controller function to handle user sign-up.
+// Controller function to handle user sign-up.
+module.exports.create = async (req, res) => {
+
+    // Check if the 'password' and 'confirmpassword' fields match.
+    if (req.body.password !== req.body.confirmpassword) {
+
+        // Log a message indicating password mismatch.
+        console.log("Password Mismatch");
+
+        // If the passwords do not match, redirect back to the previous page.
+        return res.redirect('back');
+    }
+
+    // Find a user with the provided email in the database using the 'User' model.
+    User.findOne({ email: req.body.email })
+        .exec()
+        .then((user) => {
+            if (!user) {
+                // If no user with the provided email exists, create a new user with the form data.
+
+                User.create(req.body)
+                    .then((user) => {
+                        // On successful user creation, redirect to the '/users/sign-in' page to prompt the user to sign in.
+                        return res.redirect('/users/sign-in');
+                    })
+                    .catch((err) => {
+                        // If there's an error while creating the user, log the error and return.
+                        console.log("Error while creating user while signup!");
+                        return;
+                    });
+
+            } else {
+                // If a user with the same email already exists, redirect back to the previous page.
+                console.log("User Already Exists");
+                return res.redirect('back');
+            }
+        })
+        .catch((err) => {
+            // If there's an error while finding the user, log the error and return.
+            console.log("Error in finding user in signup!");
+            return;
+        });
+};
+```
+
+Step 6: Update the user router for the post request.
+```
+router.post('/create', usersController.create);
+```

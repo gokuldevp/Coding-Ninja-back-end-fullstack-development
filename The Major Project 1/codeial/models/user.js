@@ -2,16 +2,16 @@ const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({    // Creating a new Schema
     email: {
-        type: string,       // set the type as string
+        type: String,       // set the type as string
         required: true,     // make the attribute as manditory
         unique: true,       // make the attribute unique(no dublicates are allowed)
     },
     password: {
-        type: string,
+        type: String,
         required: true,
     },
     name: {
-        type: string,
+        type: String,
         required: true,
     },
 }, {
