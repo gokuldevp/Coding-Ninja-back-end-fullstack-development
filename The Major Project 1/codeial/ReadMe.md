@@ -313,3 +313,21 @@ router.post('/create', usersController.signUp);
 
 router.post('create-session', usersController.signIn);
 ```
+
+======================================================================================
+## Creating and Altering a Cookie
+1. Step 1: Install cookie parser package `npm install cookie-parser`
+2. Step 2: Require cookie parser in the main index.js file
+```
+const cookieParser = require('cookie-parser');
+```
+3. Step 3: use the urlencoded and cookieParser as middleware
+```
+app.use(express.urlencoded());
+app.use(cookieParser())
+```
+
+note: 
+* we can user console.log(req.cookies); in the action to log the cookies
+* We can change the value of the cookies at the server using res.cookies('cookie name', value);
+======================================================================================

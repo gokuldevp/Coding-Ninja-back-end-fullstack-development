@@ -1,6 +1,9 @@
 // Import the 'express' module to create an Express application.
 const express = require('express');
 
+// import the 'cookie-parser' to handle coookie
+const cookieParser = require('cookie-parser');
+
 // Set the port number to 8000.
 const port = 8000;
 
@@ -9,6 +12,12 @@ const app = express();
 
 // import mongoose from the mongoose.js file
 const db = require('./config/mongoose');
+
+// Middleware to parse incoming request bodies with 'Content-Type: application/x-www-form-urlencoded' format.
+app.use(express.urlencoded());
+
+// Middleware to parse and handle cookies attached to incoming requests.
+app.use(cookieParser())
 
 // Using the middleware 'express.static' handles serving static files in Express, Serving static files from the 'assets' directory 
 app.use(express.static('./assets'));
