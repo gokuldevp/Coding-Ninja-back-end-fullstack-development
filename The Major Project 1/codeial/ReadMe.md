@@ -386,4 +386,99 @@ module.exports.create = async (req, res) => {
 router.post('/create', usersController.create);
 ```
 
-7. Step 7: Handle User SignUp for post request in the user controller
+7. Step 7: Handle User SignUp(createSession) for post request in the user controller
+-->
+steps to authenticate
+* Find the user
+* handle user found
+* handle passsword which don't match
+* handle session creation
+* handle user not found
+```
+// Handling User Signin
+module.exports.createSession = async (req, res) => {
+    // Find the user
+    User.findOne({ email: req.body.email })
+        .exec()
+        .then((user) => {
+            // handle user found
+            if (user) {
+                // handle password mismatch
+                if (user.password !== req.body.password) {
+                    console.log("The password is wrong");
+                    return res.redirect('back');
+                }
+
+                // handle session creation
+                res.cookie('user_id', user.id);
+                return res.redirect('/users/profile');
+            } else {
+                // handle user not found
+                console.log("The user is not found");
+                return res.redirect('back');
+            }
+        })
+        .catch((err) => {
+            // error in finding user during signin
+            console.log("Error in finding user during signin!");
+            return;
+        });
+};
+```
+
+8. Step 8: Updating the profile action
+```
+// Render the profile page
+module.exports.profile = async (req, res) => {
+    // Find the user using the cookie id
+    let _id = req.cookies.user_id;
+
+    if (!_id) {
+        // If the user cookie is not present, log the message and redirect to the sign-in page.
+        console.log("The user cookie is not present!");
+        return res.redirect('/users/sign-in');
+    }
+
+    // Find the user with the provided _id in the User collection.
+    User.findOne({ _id })
+        .exec()
+        .then((user) => {
+            // If the user is found
+            if (user) {
+                // Create a variable to pass user data to the profile page template.
+                let profileVariable = {
+                    title: user.name,
+                    email: user.email,
+                };
+                // Render the 'profile' page with the user data.
+                return res.render('profile', profileVariable);
+            } else {
+                // If the user is not found, log the message and redirect to the sign-in page.
+                console.log("User is not found!");
+                return res.redirect('/users/sign-in');
+            }
+        })
+        .catch((err) => {
+            // If there's an error while accessing the profile page, log the error and return.
+            console.log("Error in redirecting the profile page!");
+            return;
+        });
+};
+```
+
+9. Step 9: handle the user signout.
+* create controller 
+```
+// Controller function to handle user sign-out
+module.exports.signOut = async (req, res) => {
+    // Clear the 'user_id' cookie to sign out the user
+    res.clearCookie('user_id');
+
+    // Redirect the user to the sign-in page after signing out
+    res.redirect('/users/sign-in');
+}
+```
+* Create the router
+```
+router.get('/sign-out', usersController.signOut);
+```

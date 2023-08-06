@@ -2,6 +2,8 @@
 
 <div class="navbar">
     <a href="#home">Home</a>
-    <a href="/users/sign-up">Sign Up</a>
-    <a href="/users/sign-in">Sign In</a>
+
+    <% navLinks.forEach((item) => { %>
+        <a href="<%= item.link%>"><%= item.itemName%></a>
+    <% }) %>
 </div>
