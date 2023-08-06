@@ -337,7 +337,6 @@ note:
 5. Step 5: Handle User SignUp for post request in the user controller
 ```
 // Controller function to handle user sign-up.
-// Controller function to handle user sign-up.
 module.exports.create = async (req, res) => {
 
     // Check if the 'password' and 'confirmpassword' fields match.
@@ -382,7 +381,9 @@ module.exports.create = async (req, res) => {
 };
 ```
 
-Step 6: Update the user router for the post request.
+6. Step 6: Update the user router for the post request.
 ```
 router.post('/create', usersController.create);
 ```
+
+7. Step 7: Handle User SignUp for post request in the user controller

@@ -19,7 +19,6 @@ module.exports.signIn = async (req, res) => {
 
 // Render the Signup page
 module.exports.signUp = async (req, res) => {
-    console.log(req.cookies);
     let signupVariables = {
         title: 'Codeial | SIGN UP'
     }
@@ -69,7 +68,6 @@ module.exports.create = async (req, res) => {
             return;
         });
 };
-
 
 
 
