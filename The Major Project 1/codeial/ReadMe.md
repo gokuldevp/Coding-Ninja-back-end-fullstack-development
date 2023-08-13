@@ -482,3 +482,6 @@ module.exports.signOut = async (req, res) => {
 ```
 router.get('/sign-out', usersController.signOut);
 ```
+
+============================================================================================================
+## Authentication Using Passport js
