@@ -332,3 +332,66 @@ note:
 * We can change the value of the cookies at the server using res.cookies('cookie name', value);
 ======================================================================================
 ## Authentication Using Passport js
+
+[password js documentation](https://www.passportjs.org/)
+[Password js local authenticaion doc](https://www.passportjs.org/packages/passport-local/)
+
+* Step 1: install passport js `npm install passport-local`.
+* Step 2: Create a new js file called 'passport-local-strategies.js' in the config folder
+* Step 3: Import passport module to the page
+* Step 4: Import passport local strategy to the file
+* Step 5: Import the Model to the file
+* Step 6: Authenticate the user
+```
+// Configure passport to use a LocalStrategy for authentication
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const User = require('../models/user'); // Import the User model
+
+// Set up the LocalStrategy
+passport.use(new LocalStrategy({
+    usernameField: 'email' // Use the 'email' field for username
+    },
+    // This function is called during authentication
+    (email, password, done) => {
+        // Find a user with the provided email
+        User.findOne({ email: email }, function (err, user) {
+            if (err) { 
+                console.log('Error in finding user --> Passport');
+                return done(err); // Return error if there's a problem
+            }
+            if (!user || user.password != password) { 
+                console.log("Invalid User");
+                return done(null, false); // Authentication failed
+            }
+            return done(null, user); // Authentication successful
+        });
+    }
+));
+```
+
+* Step 7: serializing the user to decide which key is needed to be kept in the cookies
+```
+passport.serializeUser((user, done) => {
+    done(null, user.id); // Serialize user by storing their ID in the session cookies
+});
+```
+
+* Step 8: Deserializing the user from the key stored in the cookies
+```
+passport.deserializeUser((id, done) => {
+    // Find the user based on the stored ID
+    User.findById(id, (err, user) => {
+        if (err) {
+            console.log('Error in finding user --> Passport');
+            return done(err); // Return error if there's a problem
+        }
+
+        return done(err, user); // Return the deserialized user
+    });
+});
+```
+Step 9: export the password
+```
+module.exports = passport;
+```
