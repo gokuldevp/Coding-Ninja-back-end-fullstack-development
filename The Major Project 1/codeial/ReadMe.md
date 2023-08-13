@@ -333,6 +333,8 @@ note:
 ======================================================================================
 ## Authentication Using Passport js
 
+### Setting up Passport.js
+
 [password js documentation](https://www.passportjs.org/)
 [Password js local authenticaion doc](https://www.passportjs.org/packages/passport-local/)
 
@@ -349,23 +351,28 @@ const LocalStrategy = require('passport-local').Strategy;
 const User = require('../models/user'); // Import the User model
 
 // Set up the LocalStrategy
+// Set up the LocalStrategy
 passport.use(new LocalStrategy({
     usernameField: 'email' // Use the 'email' field for username
     },
     // This function is called during authentication
     (email, password, done) => {
         // Find a user with the provided email
-        User.findOne({ email: email }, function (err, user) {
-            if (err) { 
-                console.log('Error in finding user --> Passport');
-                return done(err); // Return error if there's a problem
-            }
+        User.findOne({email:email})
+        .then((user) => {
             if (!user || user.password != password) { 
                 console.log("Invalid User");
                 return done(null, false); // Authentication failed
             }
             return done(null, user); // Authentication successful
-        });
+        })
+        .catch((err) => {
+            if (err) { 
+                console.log('Error in finding user --> Passport');
+                return done(err); // Return error if there's a problem
+            }
+        })
+        
     }
 ));
 ```
@@ -394,4 +401,56 @@ passport.deserializeUser((id, done) => {
 Step 9: export the password
 ```
 module.exports = passport;
+```
+
+### Express sessions and using passport js
+
+* Step 1: install express sessions `npm install express-session`
+* Step 2: Import required modules for user session management and authentication in 'index.js' main file
+```
+const session = require('express-session'); // Handle user session data
+const passport = require('passport'); // Manage authentication
+const passportLocal = require('./config/passport-local-strategies'); // Import local authentication strategies
+```
+
+* Step 3: Configure session management middleware for the application [express session doc](https://www.npmjs.com/package/express-session)
+Note: session management middleware need to be used after setting up views
+```
+app.use(session({
+    name: 'codeial',                 // Name of the session cookie
+    secret: 'abcdef',                // Secret used to sign and encrypt session data
+    saveUninitialized: false,        // Don't save uninitialized sessions
+    resave: false,                   // Don't save session if it hasn't been modified
+    cookie: {
+        maxAge: (1000 * 60 * 100)    // Maximum age of the session cookie (in milliseconds)
+    }
+}));
+```
+
+* Step 4: Initialize and set up Passport.js for authentication in index.js as middleware
+Note: This need to be done before routes
+```
+app.use(passport.initialize());   // Initialize Passport authentication
+app.use(passport.session());      // Manage user sessions with Passport
+```
+
+* Step 5: Handle Create session in user_controllers
+```
+// Handing User Signin
+module.exports.createSession = async (req, res) => {
+    return res.redirect('/');
+}
+```
+
+* Step 6: require the passport in the users_router.js
+```
+const passport = require('passport');
+```
+
+* Step 7: use passport as a middleware to authenticate create-session
+```
+router.post('/create-session',passport.authenticate(
+    'local',
+    {failureRedirect: '/users/sign-in'},
+), usersController.createSession);
 ```
