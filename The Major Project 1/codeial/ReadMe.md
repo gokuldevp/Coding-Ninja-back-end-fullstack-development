@@ -454,3 +454,31 @@ router.post('/create-session',passport.authenticate(
     {failureRedirect: '/users/sign-in'},
 ), usersController.createSession);
 ```
+
+### Setting current authenticated user
+
+* Step 1: Create the passport.checkAuthentication and passport.setAuthenticationUser in passport-local-strategies.js
+```
+// Check if the user is authenticated
+passport.checkAuthentication = (req, res, next) => {
+    // if the user is signed in then pass on the request to the next function(controller's actions) 
+    if (req.isAuthenticated()){
+        return next();
+    }
+    
+    // if the user is not signed in
+    return res.redirect('/users/sign-in');
+}
+
+passport.setAuthenticationUser = (req, res, next) => {
+    if (req.isAuthenticated()){
+        // req.user contains the current signed in user for the session cookies and we are just sending this to the locals for the views
+        res.locals.user = req.user;
+    }
+    next()
+}
+```
+* Step 2: Route that requires authentication in routers file
+```
+router.get(['/profile'],passport.checkAuthentication, usersController.profile);
+```

@@ -16,7 +16,7 @@ const db = require('./config/mongoose');
 // Import required modules for user session management and authentication
 const session = require('express-session'); // Handle user session data
 const passport = require('passport'); // Manage authentication
-const passportLocal = require('./config/passport-local-strategies'); // Import local authentication strategies
+const passportLocal = require('./config/passport-local-strategy'); // Import local authentication strategies
 
 
 // Middleware to parse incoming request bodies with 'Content-Type: application/x-www-form-urlencoded' format.
@@ -59,6 +59,8 @@ app.use(session({
 // Initialize and set up Passport.js for authentication
 app.use(passport.initialize());   // Initialize Passport authentication
 app.use(passport.session());      // Manage user sessions with Passport
+
+app.use(passport.setAuthenticationUser);
 
 // Use the routes defined in the './routes' file for all incoming requests at the root path ('/').
 app.use('/', require('./routes'));
