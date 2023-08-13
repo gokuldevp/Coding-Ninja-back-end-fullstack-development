@@ -73,5 +73,5 @@ module.exports.create = async (req, res) => {
 
 // Handing User Signin
 module.exports.createSession = async (req, res) => {
-    return res.redirect('/');
+    return res.redirect('/users/profile');
 }

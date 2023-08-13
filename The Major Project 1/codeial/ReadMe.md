@@ -482,3 +482,8 @@ passport.setAuthenticationUser = (req, res, next) => {
 ```
 router.get(['/profile'],passport.checkAuthentication, usersController.profile);
 ```
+
+* Step 3: Use the custom middleware in index.js file to ensure that the authenticated user information is available in requests
+```
+app.use(passport.setAuthenticationUser);
+```

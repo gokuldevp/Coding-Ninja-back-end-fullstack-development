@@ -60,6 +60,7 @@ app.use(session({
 app.use(passport.initialize());   // Initialize Passport authentication
 app.use(passport.session());      // Manage user sessions with Passport
 
+// Use the custom middleware to ensure that the authenticated user information is available in requests
 app.use(passport.setAuthenticationUser);
 
 // Use the routes defined in the './routes' file for all incoming requests at the root path ('/').
