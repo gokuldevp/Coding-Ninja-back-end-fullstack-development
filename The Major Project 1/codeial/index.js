@@ -18,6 +18,9 @@ const session = require('express-session'); // Handle user session data
 const passport = require('passport'); // Manage authentication
 const passportLocal = require('./config/passport-local-strategy'); // Import local authentication strategies
 
+// import the 'connect-mongo' to save cookies in db
+const MongoStore = require('connect-mongo');
+
 
 // Middleware to parse incoming request bodies with 'Content-Type: application/x-www-form-urlencoded' format.
 app.use(express.urlencoded({extended: true}));
@@ -45,7 +48,7 @@ app.set('view engine', 'ejs');
 app.set('views', './views');
 
 
-// Configure session management middleware for the application
+// Configure session management using Express.js middleware
 app.use(session({
     name: 'codeial',                 // Name of the session cookie
     secret: 'abcdef',                // Secret used to sign and encrypt session data
@@ -53,8 +56,21 @@ app.use(session({
     resave: false,                   // Don't save session if it hasn't been modified
     cookie: {
         maxAge: (1000 * 60 * 100)    // Maximum age of the session cookie (in milliseconds)
+    },
+    // Use MongoStore to save the session cookie in the MongoDB database
+    store: MongoStore.create({
+        // Provide the URL for connecting to the MongoDB database
+        mongoUrl: 'mongodb://127.0.0.1/condial_development'
+    },
+    // Callback function executed after attempting to establish the connection
+    (err) => {
+        // If an error occurs during the connection, log the error
+        // Otherwise, indicate successful connection
+        console.log(err || "Mongo store is connected successfully!")
     }
+    )
 }));
+
 
 // Initialize and set up Passport.js for authentication
 app.use(passport.initialize());   // Initialize Passport authentication

@@ -351,7 +351,6 @@ const LocalStrategy = require('passport-local').Strategy;
 const User = require('../models/user'); // Import the User model
 
 // Set up the LocalStrategy
-// Set up the LocalStrategy
 passport.use(new LocalStrategy({
     usernameField: 'email' // Use the 'email' field for username
     },
@@ -367,12 +366,9 @@ passport.use(new LocalStrategy({
             return done(null, user); // Authentication successful
         })
         .catch((err) => {
-            if (err) { 
-                console.log('Error in finding user --> Passport');
-                return done(err); // Return error if there's a problem
-            }
+            console.log('Error in finding user --> Passport');
+            return done(err); // Return error if there's a problem
         })
-        
     }
 ));
 ```
@@ -386,15 +382,18 @@ passport.serializeUser((user, done) => {
 
 * Step 8: Deserializing the user from the key stored in the cookies
 ```
+// Deserializing the user from the key stored in the cookies
 passport.deserializeUser((id, done) => {
     // Find the user based on the stored ID
-    User.findById(id, (err, user) => {
-        if (err) {
-            console.log('Error in finding user --> Passport');
-            return done(err); // Return error if there's a problem
-        }
-
-        return done(err, user); // Return the deserialized user
+    User.findOne({ _id: id})
+    .then((user) => {
+      // if succeeded do this block of code
+      return done(null, user);
+    })
+    .catch((err) => {
+      // catch error
+      console.log('Error in finding user --> Passport');
+      return done(err);
     });
 });
 ```
@@ -487,3 +486,79 @@ router.get(['/profile'],passport.checkAuthentication, usersController.profile);
 ```
 app.use(passport.setAuthenticationUser);
 ```
+
+============================================================================================================================
+### Passing User data to views and restricting page access(Making the signin and signup page not available for a login user)
+
+* Step 1: Use req.isAuthenticated() in to redirect the login user to the profile page while signin/signup
+
+```
+// Render the Signin page
+module.exports.signIn = async (req, res) => {
+
+    if (req.isAuthenticated()){
+        return res.redirect('/users/profile');
+    }
+
+    let signinVariables = {
+        title: 'Codeial | SIGN IN'
+    }
+    return res.render("user_signin", signinVariables);
+}
+
+// Render the Signup page
+module.exports.signUp = async (req, res) => {
+    if (req.isAuthenticated()){
+        return res.redirect('/users/profile');
+    }
+
+    let signupVariables = {
+        title: 'Codeial | SIGN UP'
+    }
+    return res.render("user_signup", signupVariables);
+}
+```
+
+* Step 2: Update the Profile page to user the user information in the render page page
+```
+<h1>Profile | <%= user.name %></h1>
+<p><%= user.name%></p>
+<p><%= user.email%></p>
+```
+
+=======================================================================================================================
+### Setting up Mongo store for session cookies
+* Step 1: install mongo store `npm install connect-mongo` [connect-mongo doc](https://www.npmjs.com/package/connect-mongo)
+* Step 2: Add the mongo store to the main index.js file
+
+```
+const MongoStore = require('connect-mongo');
+```
+
+* Step 3: Add the mongo store to the session middleware
+```
+// Configure session management using Express.js middleware
+app.use(session({
+    name: 'codeial',                 // Name of the session cookie
+    secret: 'abcdef',                // Secret used to sign and encrypt session data
+    saveUninitialized: false,        // Don't save uninitialized sessions
+    resave: false,                   // Don't save session if it hasn't been modified
+    cookie: {
+        maxAge: (1000 * 60 * 100)    // Maximum age of the session cookie (in milliseconds)
+    },
+    // Use MongoStore to save the session cookie in the MongoDB database
+    store: MongoStore.create({
+        // Provide the URL for connecting to the MongoDB database
+        mongoUrl: 'mongodb://127.0.0.1/condial_development'
+    },
+    // Callback function executed after attempting to establish the connection
+    (err) => {
+        // If an error occurs during the connection, log the error
+        // Otherwise, indicate successful connection
+        console.log(err || "Mongo store is connected successfully!")
+    }
+    )
+}));
+```
+
+### Creating Sign out

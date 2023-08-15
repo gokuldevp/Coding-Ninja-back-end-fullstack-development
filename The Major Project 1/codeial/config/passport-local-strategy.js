@@ -20,10 +20,8 @@ passport.use(new LocalStrategy({
             return done(null, user); // Authentication successful
         })
         .catch((err) => {
-            if (err) { 
-                console.log('Error in finding user --> Passport');
-                return done(err); // Return error if there's a problem
-            }
+            console.log('Error in finding user --> Passport');
+            return done(err); // Return error if there's a problem
         })
     }
 ));
@@ -35,9 +33,9 @@ passport.serializeUser((user, done) => {
 });
 
 // Deserializing the user from the key stored in the cookies
-passport.deserializeUser( async (id, done) => {
+passport.deserializeUser((id, done) => {
     // Find the user based on the stored ID
-    await User.find({id})
+    User.findOne({ _id: id})
     .then((user) => {
       // if succeeded do this block of code
       return done(null, user);

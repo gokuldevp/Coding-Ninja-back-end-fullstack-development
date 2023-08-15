@@ -2,15 +2,21 @@
 const User = require('../models/user');
 
 // Render the profile page
-module.exports.profile = async (req, res)=> {
+module.exports.profile = (req, res)=> {
     let profileVariable = {
-        title: 'Gokul'
+        title: 'Profile Page'
     }
     return res.render('profile', profileVariable)
 }
 
 // Render the Signin page
 module.exports.signIn = async (req, res) => {
+    // If the user is authenticated, they are redirected to their profile.
+    if (req.isAuthenticated()){
+        return res.redirect('/users/profile');
+    }
+
+    // the "user_signin" template is rendered with appropriate variables.
     let signinVariables = {
         title: 'Codeial | SIGN IN'
     }
@@ -19,6 +25,12 @@ module.exports.signIn = async (req, res) => {
 
 // Render the Signup page
 module.exports.signUp = async (req, res) => {
+    // If the user is authenticated, they are redirected to their profile.
+    if (req.isAuthenticated()){
+        return res.redirect('/users/profile');
+    }
+
+    // the "user_signup" template is rendered with appropriate variables.
     let signupVariables = {
         title: 'Codeial | SIGN UP'
     }
@@ -68,7 +80,6 @@ module.exports.create = async (req, res) => {
             return;
         });
 };
-
 
 
 // Handing User Signin
