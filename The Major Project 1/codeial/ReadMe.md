@@ -562,3 +562,37 @@ app.use(session({
 ```
 
 ### Creating Sign out
+* Step 1: create link for signout (_header.ejs) / also makeing it visible only if the user is login in
+```
+<div class="navbar">
+    <a href="/">Home</a>
+    <% if (locals.user) { %>
+        <a href="/users/profile"><%= user.name%></a>
+        <a href="/users/sign-out">Sign Out</a>
+    <% } else { %>
+        <a href="/users/sign-up">Sign Up</a>
+        <a href="/users/sign-in">Sign In</a> 
+    <% } %>
+</div>
+```
+
+* Step 2: Create Action for the signout in users controller
+```
+// Handle signout 
+module.exports.signOut = async (req, res) => {
+    // landle logout
+    req.logout((err) => {
+        if (err) {
+            // Handle any error that might occur during logout
+            console.error(err);
+        }
+        return res.redirect('/');
+    });
+}
+```
+
+* Step 3: Create the route in users routes
+
+```
+router.get('/sign-out', usersController.signOut);
+```

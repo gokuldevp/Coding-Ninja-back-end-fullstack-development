@@ -86,3 +86,14 @@ module.exports.create = async (req, res) => {
 module.exports.createSession = async (req, res) => {
     return res.redirect('/users/profile');
 }
+
+// Handle signout 
+module.exports.signOut = async (req, res) => {
+    req.logout((err) => {
+        if (err) {
+            // Handle any error that might occur during logout
+            console.error(err);
+        }
+        return res.redirect('/');
+    });
+}
