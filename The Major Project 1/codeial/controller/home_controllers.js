@@ -2,10 +2,18 @@ const Post = require('../models/post');
 const User = require('../models/user');
 
 module.exports.home = async (req, res) => {
-    let homeVariables = {
-        title: 'Codeial'
-    }
-    return res.render("home", homeVariables);
+    Post.find({})
+    .then((post) => {
+        let homeVariables = {
+            title: 'Codeial',
+            posts: post
+        }
+        return res.render("home", homeVariables);
+    })
+    .catch((err) => {
+        console.log("error while finding post");
+        return;
+    })
 }
 
 module.exports.createPost = async (req, res) => {

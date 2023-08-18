@@ -686,3 +686,40 @@ module.exports.createPost = async (req, res) => {
     });
 }
 ```
+
+=====================================================================================================================================
+### making the post form only visible to the logged in user using locals.user in ejs file
+```
+    <% if (locals.user) { %>
+    <form action="/create-post" id="new-post-form" method="post">
+        <textarea name="content" id="content" cols="30" rows="10" placeholder="Type here..." required></textarea>
+        <input type="submit" value="post">
+    </form>
+    <%}%>
+```
+
+=====================================================================================================================================
+### Display Posts and related User
+* Step 1: Find all the post in the home action
+```
+module.exports.home = async (req, res) => {
+    Post.find({})
+    .then((post) => {
+        let homeVariables = {
+            title: 'Codeial',
+            posts: post
+        }
+        return res.render("home", homeVariables);
+    })
+    .catch((err) => {
+        console.log("error while finding post");
+        return;
+    })
+}
+
+```
+
+* Step 2: Create a list in the home folder to display the posts
+```
+
+```

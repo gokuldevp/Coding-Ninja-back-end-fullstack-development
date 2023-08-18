@@ -1,4 +1,20 @@
-div.navbar {
+.navbar {
   background-color: rgb(111, 235, 152);
   margin: 0;
+  border: 0;
+  width: 100vw;
+  height: 5vh;
+  display: flex;
+  justify-content: flex-end; /* Align items to the right */
+  position: relative;
+}
+.navbar a {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  margin: 0 10px;
+}
+.navbar a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
 }
