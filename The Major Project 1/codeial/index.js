@@ -4,11 +4,29 @@ const express = require('express');
 // import the 'cookie-parser' to handle cookie
 const cookieParser = require('cookie-parser');
 
+// const sass = require('sass');
+
 // Set the port number to 8000.
 const port = 8000;
 
 // Create the Express app.
 const app = express();
+
+// app.use((req, res, next) => {
+//     if (req.url.endsWith('.css')) {
+//         const scssPath = './assets/sass' + req.url.replace('.css', '.scss');
+  
+//       try {
+//         const result = sass.renderSync({ file: scssPath });
+//         res.setHeader('Content-Type', 'text/css');
+//         res.send(result.css.toString());
+//       } catch (error) {
+//         res.status(500).send('SCSS compilation error');
+//       }
+//     } else {
+//       next();
+//     }
+//   });
 
 // import mongoose from the mongoose.js file
 const db = require('./config/mongoose');

@@ -596,3 +596,93 @@ module.exports.signOut = async (req, res) => {
 ```
 router.get('/sign-out', usersController.signOut);
 ```
+
+=========================================================================================================================
+### Using SASS/ SCSS file in node- express
+* Step 1: Install sass `npm install sass`
+* Step 2: config setup fund `npm config set fund false`
+* step 3: Add sas-watch in scripts in the package.json
+```
+"sass-watch": "sass --no-source-map --watch assets/scss/:assets/css/",
+```
+* Step 4: Create a scss folder in the assets folder
+* Step 5: Create the scss file in the scss folder
+* Step 6: use the below comment in the terminal to run the scss file
+```
+npm run sass-watch
+```
+Note: this will convert the scss file to a css file and add it to the css folder, after which we can directly use the detials
+
+==========================================================================================================================
+### Creating Schema for Posts
+
+* Step 1: create a new models called post.js
+* Step 2: create a new schema in post.js for handing posts
+```
+const mongoose = require('mongoose');
+
+// Define the structure of a 'Post' using a Mongoose schema
+const postSchema = new mongoose.Schema({
+    content: {
+        type: String,
+        required: true
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // This refers to the 'User' model for associating posts with users
+        required: true
+    }
+}, {
+    timestamps: true // This automatically adds 'createdAt' and 'updatedAt' fields to each document
+});
+
+// Create a 'Post' model based on the defined schema
+const Post = mongoose.model('Post', postSchema);
+
+// Export the 'Post' model to be used in other parts of the application
+module.exports = Post;
+```
+
+* Step 3: create a form for submitting the user post in home.ejs
+```
+<section id="feed-posts">
+    <h4>
+        Posts
+    </h4>
+
+    <form action="/create-post" id="new-post-form" method="post">
+        <textarea name="content" id="content" cols="30" rows="10" placeholder="Type here..."></textarea>
+        <input type="submit" value="post">
+    </form>
+</section>
+```
+
+* Step 4: Create a action and controller for the post request in home controller and index.js(routes)
+```
+module.exports.createPost = async (req, res) => {
+    return res.redirect('/');
+}
+```
+```
+router.post('/create-post',passport.checkAuthentication,homeController.createPost);
+```
+
+* In the createPost Action, add the user post in the db when ever a user is post something
+```
+module.exports.createPost = async (req, res) => {
+    // Add the post in the DB
+    Post.create({
+        content: req.body.content,
+        user: req.user._id,
+    })
+    .then((post) => {
+        // On successful user creation of post, redirect 'back' page.
+        return res.redirect('back');
+    })
+    .catch((err) => {
+        // If there's an error while creating the Post, log the error and return.
+        console.log("Error while creating user post!");
+        return;
+    });
+}
+```
