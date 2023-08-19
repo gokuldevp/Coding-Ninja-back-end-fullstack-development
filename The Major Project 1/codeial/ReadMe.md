@@ -699,7 +699,7 @@ module.exports.createPost = async (req, res) => {
 ```
 
 =====================================================================================================================================
-### Display Posts and related User
+### Display Posts
 * Step 1: Find all the post in the home action
 ```
 module.exports.home = async (req, res) => {
@@ -721,5 +721,61 @@ module.exports.home = async (req, res) => {
 
 * Step 2: Create a list in the home folder to display the posts
 ```
+<section id="feed-posts">
+    <h4>
+        Posts
+    </h4>
+    <% if (locals.user) { %>
+    <form action="/create-post" id="new-post-form" method="post">
+        <textarea name="content" id="content" cols="30" rows="10" placeholder="Type here..." required></textarea>
+        <input type="submit" value="post">
+    </form>
+    <%}%>
 
+    <div id="posts-list-container">
+        <ul>
+            <% for (post of posts) {%>
+            <li><%= post.content %></li>
+            <%}%>
+        </ul>
+
+    </div>
+</section>
 ```
+
+=======================================================================================================
+### Displaying User details with the post
+* Step 1: Populate the user using '.populate('user')' in home_controller
+```
+// Controller action for rendering the home page
+module.exports.home = async (req, res) => {
+    // Find all posts and populate the 'user' field for each post
+    Post.find({}).populate('user')
+    .then((posts) => {
+        // Prepare variables to be sent to the home view template
+        let homeVariables = {
+            title: 'Codeial', // Title of the page
+            posts: posts      // List of posts retrieved from the database
+        };
+        // Render the 'home' view template with the prepared variables
+        return res.render("home", homeVariables);
+    })
+    .catch((err) => {
+        console.log("Error while finding posts:", err);
+        // If an error occurs during database retrieval, log the error and return
+        return;
+    });
+}
+```
+* Step 2: Add the user in details in the ejs file
+```
+    <div id="posts-list-container">
+        <ul>
+            <% for (post of posts) {%>
+            <li><%= post.user.name %></li>
+            <li><%= post.content %></li>
+            <%}%>
+        </ul>
+    </div>
+```
+

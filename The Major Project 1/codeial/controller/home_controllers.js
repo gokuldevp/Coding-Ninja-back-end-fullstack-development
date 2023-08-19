@@ -1,19 +1,23 @@
 const Post = require('../models/post');
-const User = require('../models/user');
 
+// Controller action for rendering the home page
 module.exports.home = async (req, res) => {
-    Post.find({})
-    .then((post) => {
+    // Find all posts and populate the 'user' field for each post
+    Post.find({}).populate('user')
+    .then((posts) => {
+        // Prepare variables to be sent to the home view template
         let homeVariables = {
-            title: 'Codeial',
-            posts: post
-        }
+            title: 'Codeial', // Title of the page
+            posts: posts      // List of posts retrieved from the database
+        };
+        // Render the 'home' view template with the prepared variables
         return res.render("home", homeVariables);
     })
     .catch((err) => {
-        console.log("error while finding post");
+        console.log("Error while finding posts:", err);
+        // If an error occurs during database retrieval, log the error and return
         return;
-    })
+    });
 }
 
 module.exports.createPost = async (req, res) => {
