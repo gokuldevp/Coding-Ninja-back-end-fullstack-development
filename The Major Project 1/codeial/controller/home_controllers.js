@@ -3,7 +3,15 @@ const Post = require('../models/post');
 // Controller action for rendering the home page
 module.exports.home = async (req, res) => {
     // Find all posts and populate the 'user' field for each post
-    Post.find({}).populate('user')
+    Post.find({})
+    .populate('user')
+    .populate({
+        // populate all the comments for each post and populate the user for each comments
+        path: 'comments',
+        populate: {
+            path: 'user'
+        }
+    })
     .then((posts) => {
         // Prepare variables to be sent to the home view template
         let homeVariables = {

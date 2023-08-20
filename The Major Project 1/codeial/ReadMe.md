@@ -868,3 +868,50 @@ module.exports.createComments = async (req, res) => {
 ```
 router.post('/create', commentController.createComments);
 ```
+
+====================================================================================================================================
+### Nested Population :: Display Comments
+* step 1: Populate the comments and commented user in home_controller
+```
+// Controller action for rendering the home page
+module.exports.home = async (req, res) => {
+    // Find all posts and populate the 'user' field for each post
+    Post.find({})
+    .populate('user')
+    .populate({
+        // populate all the comments for each post and populate the user for each comments
+        path: 'comments',
+        populate: {
+            path: 'user'
+        }
+    })
+    .then((posts) => {
+        // Prepare variables to be sent to the home view template
+        let homeVariables = {
+            title: 'Codeial', // Title of the page
+            posts: posts      // List of posts retrieved from the database
+        };
+        // Render the 'home' view template with the prepared variables
+        return res.render("home", homeVariables);
+    })
+    .catch((err) => {
+        console.log("Error while finding posts:", err);
+        // If an error occurs during database retrieval, log the error and return
+        return;
+    });
+}
+```
+
+* Step 2: Display the comment details in the user home page
+```
+<div id="post-comments-list">
+    <ul id="post-comments-<%= post._id%>">
+        <% for (comment of post.comments) {%>
+            <li>
+                <p><%= comment.content %></p>
+                <small><%= comment.user.name %></small>
+            </li>
+        <%}%>
+    </ul>
+</div>
+```
