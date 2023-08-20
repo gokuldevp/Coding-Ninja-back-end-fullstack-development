@@ -779,3 +779,41 @@ module.exports.home = async (req, res) => {
     </div>
 ```
 
+==========================================================================
+### Creating Schema for Comments
+
+* Step 1: Create a new database model for comment
+```
+import mongoose from "mongoose";
+
+const commentSchema = mongoose.Schema({
+    content: {type: String, required: true},
+    user: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true}
+}, {timestamps:true});
+
+const Comment = mongoose.model('Comment', commentSchema);
+
+module.exports = Comment;
+```
+
+* Step 2: add the comment as referrance in the post model
+```
+const postSchema = new mongoose.Schema({
+    content: {
+        type: String,
+        required: true
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // This refers to the 'User' model for associating posts with users
+        required: true
+    },
+    // including the array of all ids of the comments in the post schema it self
+    comment: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comment'
+    }]
+}, {
+    timestamps: true // This automatically adds 'createdAt' and 'updatedAt' fields to each document
+});
+```

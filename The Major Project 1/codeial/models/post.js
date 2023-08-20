@@ -13,7 +13,12 @@ const postSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', // This refers to the 'User' model for associating posts with users
         required: true
-    }
+    },
+    // including the array of all ids of the comments in the post schema it self
+    comment: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comment'
+    }]
 }, {
     timestamps: true // This automatically adds 'createdAt' and 'updatedAt' fields to each document
 });
