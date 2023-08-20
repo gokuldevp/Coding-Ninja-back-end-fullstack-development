@@ -863,3 +863,8 @@ module.exports.createComments = async (req, res) => {
     })
 }
 ```
+
+* Step 2: Create route for handing the create comment
+```
+router.post('/create', commentController.createComments);
+```
