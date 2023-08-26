@@ -1018,3 +1018,8 @@ router.get('/destroy/:id', passport.checkAuthentication ,commentController.desto
 <small><a href="/comments/destroy/<%= comment.id %>">Delete</a></small>
 <% } %>   
 ```
+
+### Distributing the Code into Partials
+* Step 1: Create 2 ejs file named `_comments.ejs` and `_posts.ejs`.
+* Step 2: Add the Post list in the post partial file and the comment list session in the comment partial file
+* Step 3: Add the include keyword to render the both partial file in home and post ejs file
