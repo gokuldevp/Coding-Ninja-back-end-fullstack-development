@@ -969,6 +969,7 @@ router.get("/destory/:id", passport.checkAuthentication, homeController.destoryP
 
 ### Deleting a Comment (Authorized)
 * Step 1: Create actions in the comment_controller for removing the comment from the comment db and comment id from the post db
+- Note: Post.findByIdAndUpdate(postId, { $pull: { comments: commentId } }), we need to user $pull to update the list values
 
 ```
 // This function handles the deletion of a comment from both the Comment collection and the associated Post's comments array.
