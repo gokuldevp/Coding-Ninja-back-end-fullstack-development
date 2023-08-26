@@ -1022,4 +1022,93 @@ router.get('/destroy/:id', passport.checkAuthentication ,commentController.desto
 ### Distributing the Code into Partials
 * Step 1: Create 2 ejs file named `_comments.ejs` and `_posts.ejs`.
 * Step 2: Add the Post list in the post partial file and the comment list session in the comment partial file
-* Step 3: Add the include keyword to render the both partial file in home and post ejs file
+* Step 3: Add the include keyword to render the both partial file in home and post ejs file.
+
+
+### User profile links
+* Step 1: Update the Home page to display all the user data
+- home controller
+```
+module.exports.home = async (req, res) => {
+    // Find all posts and populate the 'user' field for each post
+    Post.find({})
+    .populate('user')
+    .populate({
+        // populate all the comments for each post and populate the user for each comments
+        path: 'comments',
+        populate: {
+            path: 'user'
+        }
+    })
+    .then((posts) => {
+        User.find({})
+        .then((user) => {
+            // Prepare variables to be sent to the home view template
+            let homeVariables = {
+                title: 'Codeial', // Title of the page
+                posts: posts,      // List of posts retrieved from the database
+                all_users: user
+            };
+            // Render the 'home' view template with the prepared variables
+            return res.render("home", homeVariables);
+        })
+    })
+    .catch((err) => {
+        console.log("Error while finding posts:", err);
+        // If an error occurs during database retrieval, log the error and return
+        return;
+    });
+}
+```
+
+- Home.ejs
+```
+<section id="user-friends">
+    <h4>Friends</h4>
+    <% for (user of all_users) {%>
+       <a href="/users/profile/<%= user.id %>"><%= user.name %></a>
+    <%}%>
+</section>
+```
+
+* Step 2: Update the profile action and routes
+- profile action
+```
+module.exports.profile = (req, res)=> {
+    let userId = req.params.id;
+    // console.log(userId)
+
+    User.findById(userId)
+    .then((user) => {
+        let profileVariable = {
+            title: 'Profile Page',
+            profile_user: user
+        }
+        return res.render('profile', profileVariable)
+    })
+}
+```
+
+- Profile routes
+```
+router.get('/profile/:id',passport.checkAuthentication, usersController.profile);
+```
+
+* Step 3: Update the profile page
+```
+<h1>Profile | <%= profile_user.name %></h1>
+
+<p><%= profile_user.name%></p>
+<p><%= profile_user.email%></p>
+```
+
+* Step 4: Update the create session action and nav bar to redirect to the user profile
+```
+module.exports.createSession = async (req, res) => {
+    return res.redirect('/users/profile/'+ req.user._id);
+}
+```
+
+```
+<a href="/users/profile/<%= locals.user._id %>"><%= user.name%></a>
+```

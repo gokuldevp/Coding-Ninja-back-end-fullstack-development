@@ -1,5 +1,6 @@
 const Post = require('../models/post');
 const Comment = require('../models/comment');
+const User = require('../models/user');
 
 // Controller action for rendering the home page
 module.exports.home = async (req, res) => {
@@ -14,13 +15,17 @@ module.exports.home = async (req, res) => {
         }
     })
     .then((posts) => {
-        // Prepare variables to be sent to the home view template
-        let homeVariables = {
-            title: 'Codeial', // Title of the page
-            posts: posts      // List of posts retrieved from the database
-        };
-        // Render the 'home' view template with the prepared variables
-        return res.render("home", homeVariables);
+        User.find({})
+        .then((user) => {
+            // Prepare variables to be sent to the home view template
+            let homeVariables = {
+                title: 'Codeial', // Title of the page
+                posts: posts,      // List of posts retrieved from the database
+                all_users: user
+            };
+            // Render the 'home' view template with the prepared variables
+            return res.render("home", homeVariables);
+        })
     })
     .catch((err) => {
         console.log("Error while finding posts:", err);

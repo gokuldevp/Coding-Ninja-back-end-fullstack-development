@@ -3,17 +3,24 @@ const User = require('../models/user');
 
 // Render the profile page
 module.exports.profile = (req, res)=> {
-    let profileVariable = {
-        title: 'Profile Page'
-    }
-    return res.render('profile', profileVariable)
+    let userId = req.params.id;
+    // console.log(userId)
+
+    User.findById(userId)
+    .then((user) => {
+        let profileVariable = {
+            title: 'Profile Page',
+            profile_user: user
+        }
+        return res.render('profile', profileVariable)
+    })
 }
 
 // Render the Signin page
 module.exports.signIn = async (req, res) => {
     // If the user is authenticated, they are redirected to their profile.
     if (req.isAuthenticated()){
-        return res.redirect('/users/profile');
+        return res.redirect(`/users/profile`);
     }
 
     // the "user_signin" template is rendered with appropriate variables.
@@ -84,7 +91,7 @@ module.exports.create = async (req, res) => {
 
 // Handing User Signin
 module.exports.createSession = async (req, res) => {
-    return res.redirect('/users/profile');
+    return res.redirect('/users/profile/'+ req.user._id);
 }
 
 // Handle signout 
