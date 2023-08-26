@@ -40,3 +40,38 @@ module.exports.createComments = async (req, res) => {
         return res.send(`<h1>${error}<h1>`);
     })
 }
+
+
+// This function handles the deletion of a comment from both the Comment collection and the associated Post's comments array.
+// It takes a request and a response object as parameters, expecting the comment ID to be provided in the request parameters.
+module.exports.destoryComments = async (req, res) => {
+    const commentId = req.params.id;
+
+    // Find the comment with the given ID
+    Comment.findById(commentId)
+    .then(async (comment) => {
+        if (comment.user == req.user.id) { // Check if the current user owns the comment
+            let postId = comment.post; // Get the associated post's ID
+
+            // Delete the comment from the Comment collection
+            await Comment.deleteOne({ _id: commentId });
+
+            // Remove the comment ID from the comments array of the associated post
+            Post.findByIdAndUpdate(postId, { $pull: { comments: commentId } })
+            .then(() => {
+                console.log("Comment has been deleted from the Post!");
+                return res.redirect('back'); // Redirect the user back to the previous page
+            })
+            .catch((error) => {
+                // Handle post update error
+                console.log("Error while updating post's comments array.");
+                return res.send(`<h1>${error}</h1>`);
+            });
+        }
+    })
+    .catch((error) => {
+        // Handle comment finding error
+        console.log("Error while finding comment from the database");
+        return res.send(`<h1>${error}</h1>`);
+    });
+}

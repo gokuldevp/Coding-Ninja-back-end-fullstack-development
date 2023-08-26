@@ -9,6 +9,7 @@ const commentRouter = require('./comments_router')
 
 router.get("/", homeController.home);
 router.post('/create-post',passport.checkAuthentication,homeController.createPost);
+router.get("/destory/:id", passport.checkAuthentication, homeController.destoryPost);
 
 router.use('/users', userRouter);
 router.use('/comments', commentRouter);

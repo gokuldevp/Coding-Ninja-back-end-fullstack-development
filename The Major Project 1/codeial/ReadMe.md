@@ -915,3 +915,105 @@ module.exports.home = async (req, res) => {
     </ul>
 </div>
 ```
+
+==================================================================================================
+## Deleting and Updating Objects in Database + Distributing Views
+
+### Deleting a Post (Authorized)
+* Step 1: Create Action for deleting the post, along with the comments in home controller
+```
+module.exports.destoryPost = async (req, res) => {
+    const postId = req.params.id;
+    
+    // Find the post with the given ID
+    Post.findById(postId)
+    .then(async (post) => {
+        // Check if the current user's ID matches the user ID of the post
+        // This ensures that only the owner of the post can delete it
+        if (post.user == req.user.id) {
+            // Remove the post
+            await Post.deleteOne({ _id: postId });
+
+            // Delete all comments associated with the post
+            Comment.deleteMany({ post: postId })
+            .then((comment) => {
+                console.log("The comments related to the post have been deleted");
+                // Redirect the user back to the previous page
+                return res.redirect('back');
+            });
+
+        } else {
+            // If the user is not the owner of the post, redirect back to the previous page
+            return res.redirect('back');
+        }
+    })
+    .catch((error) => {
+        console.log("Error while finding the post!" + error);
+        return;
+    });
+}
+```
+* Step 2: Create routes in to handle the deletion of the post in index.js router
+
+```
+router.get("/destory/:id", passport.checkAuthentication, homeController.destoryPost);
+```
+
+* Step 3: setup the deletion link on the frond end(home.ejs), so that it is only available for the posted user
+
+```
+<% if (locals.user && locals.user.id == post.user.id) { %>
+<small><a href="/destory/<%= post.id %>">Delete</a></small>
+<% } %>
+```
+
+### Deleting a Comment (Authorized)
+* Step 1: Create actions in the comment_controller for removing the comment from the comment db and comment id from the post db
+
+```
+// This function handles the deletion of a comment from both the Comment collection and the associated Post's comments array.
+// It takes a request and a response object as parameters, expecting the comment ID to be provided in the request parameters.
+module.exports.destoryComments = async (req, res) => {
+    const commentId = req.params.id;
+
+    // Find the comment with the given ID
+    Comment.findById(commentId)
+    .then(async (comment) => {
+        if (comment.user == req.user.id) { // Check if the current user owns the comment
+            let postId = comment.post; // Get the associated post's ID
+
+            // Delete the comment from the Comment collection
+            await Comment.deleteOne({ _id: commentId });
+
+            // Remove the comment ID from the comments array of the associated post
+            Post.findByIdAndUpdate(postId, { $pull: { comments: commentId } })
+            .then(() => {
+                console.log("Comment has been deleted from the Post!");
+                return res.redirect('back'); // Redirect the user back to the previous page
+            })
+            .catch((error) => {
+                // Handle post update error
+                console.log("Error while updating post's comments array.");
+                return res.send(`<h1>${error}</h1>`);
+            });
+        }
+    })
+    .catch((error) => {
+        // Handle comment finding error
+        console.log("Error while finding comment from the database");
+        return res.send(`<h1>${error}</h1>`);
+    });
+}
+```
+
+* Step 2: Create route for the get request for handing the deletion of the comments in comment_routes.js
+```
+router.get('/destroy/:id', passport.checkAuthentication ,commentController.destoryComments);
+```
+
+* Step 3: Create a link for deleting comment, should be only available for the registered user who created the comment
+```
+<% if (locals.user && locals.user.id == comment.user.id) { %>
+<small><a href="/comments/destroy/<%= comment.id %>">Delete</a></small>
+<% } %>   
+```
