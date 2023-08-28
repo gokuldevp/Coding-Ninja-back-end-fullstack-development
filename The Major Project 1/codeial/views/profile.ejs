@@ -1,4 +1,18 @@
 <h1>Profile | <%= profile_user.name %></h1>
 
-<p><%= profile_user.name%></p>
-<p><%= profile_user.email%></p>
+<% if(user.id == profile_user.id ) { %>
+    <!-- if the user matches show the update form -->
+    <form action="/users/update/<%= profile_user.id %>" method="post">
+        <label for="name">Update Your Name: </label>
+        <input type="text" name="name" id="name" placeholder="Your Name" value="<%= profile_user.name %>" required>
+        <label for="email">Update Your Email: </label>
+        <input type="email" name="email" id="email" placeholder="Your Name" value="<%= profile_user.email %>" required>
+        <input type="submit" value="Update">
+    </form>
+<% } else { %> 
+    <!-- else show the profile details -->
+    <label for="profile-name">Name: </label>
+    <p id="profile-name"><%= profile_user.name%></p>
+    <label for="profile-email">Email: </label>
+    <p id="profile-email"><%= profile_user.email%></p>
+<% } %>

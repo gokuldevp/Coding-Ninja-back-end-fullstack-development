@@ -5,6 +5,7 @@ const usersController = require('../controller/users_controllers');
 
 // Route that requires authentication
 router.get('/profile/:id',passport.checkAuthentication, usersController.profile);
+router.post('/update/:id',passport.checkAuthentication, usersController.updateProfile);
 
 
 // Other routes...
