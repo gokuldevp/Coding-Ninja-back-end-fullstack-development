@@ -1158,3 +1158,42 @@ module.exports.updateProfile = async (req, res) => {
 ```
 router.post('/update/:id',passport.checkAuthentication, usersController.updateProfile);
 ```
+
+===============================================================================================================================
+## Async Await + Error Handling
+
+* Step 1: add try catch block to handle error in controllers and add async to the function and await to the db operations
+
+```
+// Controller action for rendering the home page
+module.exports.home = async (req, res) => {
+    // Find all posts and populate the 'user' field for each post
+    try {
+        const posts = await Post.find({})
+        .populate('user')
+        .populate({
+            // populate all the comments for each post and populate the user for each comments
+            path: 'comments',
+            populate: {
+                path: 'user'
+            }
+        });
+
+        const user = await User.find({})
+        
+        // Prepare variables to be sent to the home view template
+        let homeVariables = {
+            title: 'Codeial', // Title of the page
+            posts: posts,      // List of posts retrieved from the database
+            all_users: user
+        };
+        // Render the 'home' view template with the prepared variables
+        return res.render("home", homeVariables);
+
+    } catch(error) {
+        console.log("Error : ", error);
+        // If an error occurs during database retrieval, log the error and return
+        return;
+    }
+}
+```
