@@ -30,7 +30,7 @@ module.exports.home = async (req, res) => {
     } catch(error) {
         console.log("Error : ", error);
         // If an error occurs during database retrieval, log the error and return
-        return;
+        return  res.status(500);
     }
 }
 

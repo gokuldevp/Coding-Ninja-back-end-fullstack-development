@@ -6,6 +6,10 @@ const cookieParser = require('cookie-parser');
 
 // const sass = require('sass');
 
+var flash = require('connect-flash');
+
+const customMiddleWare = require('./config/middleware')
+
 // Set the port number to 8000.
 const port = 8000;
 
@@ -96,6 +100,9 @@ app.use(passport.session());      // Manage user sessions with Passport
 
 // Use the custom middleware to ensure that the authenticated user information is available in requests
 app.use(passport.setAuthenticationUser);
+
+app.use(flash());
+app.use(customMiddleWare.setFlash);
 
 // Use the routes defined in the './routes' file for all incoming requests at the root path ('/').
 app.use('/', require('./routes'));

@@ -1197,3 +1197,53 @@ module.exports.home = async (req, res) => {
     }
 }
 ```
+
+===================================================================================
+### Flash Messages :: Introduction
+
+* Step 1: install connect-flash `npm install connect-flash`, [documentation connet-flash](https://www.npmjs.com/package/connect-flash)
+* Step 2: require connect-flash in the main index.js file
+```
+var flash = require('connect-flash');
+```
+
+* Step 3: User the flash middleware after the session is being used
+```
+app.use(flash());
+```
+* Step 4: Setup the messages in the controllers
+```
+req.flash('success', "You have Successfully logged out")
+```
+
+* Step 5: Create a new custom middleware for handing flash messages by creating a new js file in config
+```
+module.exports.setFlash = async (req, res, next) =>{
+    req.local.flash = {
+        'success': req.flash('success'),
+        'error':req.flash('success'),
+    }
+    next()
+}
+```
+
+* Step 6: user the custom middleware in main index.js file after the using connect-flash
+```
+const customMiddleWare = require('./config/middleware')
+
+// other codes...
+
+app.use(customMiddleWare.setFlash);
+```
+
+* Step 7: render the the flashmessage in layout
+
+```
+    <% if (flash.success && flash.success.length > 0) { %>
+
+        <h5>
+            <%= flash.success %>
+        </h5>
+        
+    <% } %>
+```

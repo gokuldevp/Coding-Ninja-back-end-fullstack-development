@@ -117,16 +117,21 @@ module.exports.create = async (req, res) => {
 
 // Handing User Signin
 module.exports.createSession = async (req, res) => {
+    req.flash('success', "You have Successfully logged in")
+
     return res.redirect('/users/profile/'+ req.user._id);
 }
 
 // Handle signout 
 module.exports.signOut = async (req, res) => {
+    
+
     req.logout((err) => {
         if (err) {
-            // Handle any error that might occur during logout
             console.error(err);
+            return;
         }
+        req.flash('success', "You have Successfully logged out");
         return res.redirect('/');
     });
-}
+};
