@@ -1,7 +1,10 @@
 <h1>Profile | <%= profile_user.name %></h1>
 
+<img src="<%= user.avatar %>" alt="<%= user.name %>" width="100">
+
 <% if(user.id == profile_user.id ) { %>
     <!-- if the user matches show the update form -->
+
     <form action="/users/update/<%= profile_user.id %>" method="post" enctype="multipart/form-data">
         <label for="name">Update Your Name: </label>
         <input type="text" name="name" id="name" placeholder="Your Name" value="<%= profile_user.name %>" required>
@@ -11,6 +14,7 @@
         <input type="file" name="avatar" id="avatar" placeholder="Profile Image">
         <input type="submit" value="Update">
     </form>
+
 <% } else { %> 
     <!-- else show the profile details -->
     <label for="profile-name">Name: </label>

@@ -1321,3 +1321,14 @@ User.uploadedAvatar(req, res, (err) => {
     return res.redirect('back');
 });
 ```
+
+### Render the profile image in the profile page
+* Step 1: using a img tag and give the path of the file from db
+```
+<img src="<%= user.avatar %>" alt="<%= user.name %>">
+```
+
+* Step 2: use the path of the upload file in the index.js
+```
+app.use('/uploads', express.static(__dirname + '/uploads'));
+```

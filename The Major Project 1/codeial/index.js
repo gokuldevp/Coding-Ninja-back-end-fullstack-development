@@ -53,8 +53,11 @@ app.use(cookieParser())
 // Using the middleware 'express.static' handles serving static files in Express, Serving static files from the 'assets' directory 
 app.use(express.static('./assets'));
 
+app.use('/uploads', express.static(__dirname + '/uploads'));
+
 // Import the 'express-ejs-layouts' module to assess the layout file
 const expressLayouts = require("express-ejs-layouts");
+const expressEjsLayouts = require('express-ejs-layouts');
 
 //Using express-ejs-layouts middleware
 app.use(expressLayouts)
