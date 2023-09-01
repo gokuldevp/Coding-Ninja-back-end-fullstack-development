@@ -1247,3 +1247,77 @@ app.use(customMiddleWare.setFlash);
         
     <% } %>
 ```
+
+============================================================================================================
+## File upload 
+[multer documentation](https://www.npmjs.com/package/multer)
+
+* Step 1: Install `npm install --save multer`
+* Step 2: Add the attribute ` enctype="multipart/form-data" ` to the tag.
+```
+    <form action="/users/update/<%= profile_user.id %>" method="post" enctype="multipart/form-data">
+        <label for="name">Update Your Name: </label>
+        <input type="text" name="name" id="name" placeholder="Your Name" value="<%= profile_user.name %>" required>
+        <label for="email">Update Your Email: </label>
+        <input type="email" name="email" id="email" placeholder="Your Name" value="<%= profile_user.email %>" required>
+        <label for="avatar">Profile Image: </label>
+        <input type="file" name="avatar" id="avatar" placeholder="Profile Image">
+        <input type="submit" value="Update">
+    </form>
+```
+* Step 3: add the multer in the user.js model (we need to required the mutler in the required model)
+* Step 4: The code you've provided is related to configuring the storage settings for handling file uploads using the multer in user.js module
+```
+let storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      // Getting the avather path
+      cb(null, path.join(__dirname,'..', AVATER_PATH));
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+      cb(null, file.fieldname + '-' + uniqueSuffix)
+    }
+  })
+```
+
+* Step 5: Define a static method on the User schema to handle avatar uploads using multer
+```
+// Define a static method on the User schema to handle avatar uploads using multer
+// This method configures multer to use the specified storage and handle single file uploads
+// 'avater' is the name of the field in the form used for uploading the avatar
+userSchema.statics.uploadedAvatar = multer({ storage: storage }).single('avater');
+```
+
+* Step 6: Define a static property to store the path where avatars are uploaded
+```
+// AVATAR_PATH should be replaced with the actual path where avatars are stored
+userSchema.statics.avatarPath = AVATER_PATH;
+```
+
+* Step 7: Modify the controller in user profile to upload the avatar
+```
+// Find the user by their ID in the database
+let user = await User.findById(userId);
+
+// Use the uploadedAvatar middleware to handle the file upload
+User.uploadedAvatar(req, res, (err) => {
+    if (err) {
+        console.log('******Multer Error!', err);
+    }
+
+    // Update user's name and email based on the submitted form data
+    user.name = req.body.name;
+    user.email = req.body.email;
+
+    if (req.file) {
+        // If an avatar file was uploaded, update the user's avatar path
+        user.avatar = User.avatarPath + '/' + req.file.filename;
+    } else {
+        // Handle the case when no new avatar was uploaded
+        // You might choose to keep the existing avatar or take other actions here
+    }
+
+    // Save the updated user information and redirect back to the previous page
+    return res.redirect('back');
+});
+```

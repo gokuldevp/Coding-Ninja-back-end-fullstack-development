@@ -15,30 +15,77 @@ module.exports.profile = (req, res)=> {
         return res.render('profile', profileVariable)
     })
 }
-// Update Profile Route Handler
+
+// // Update Profile Route Handler
+// module.exports.updateProfile = async (req, res) => {
+//     const userId = req.params.id; // Extract the user ID from the request parameters
+
+//     // Check if the requesting user's ID matches the provided user ID
+//     if (req.user.id == userId) {
+//         // Use the Mongoose method to update the user's information by their ID
+//         await User.findByIdAndUpdate(
+//             userId, // User's ID to identify the document to update
+//             { name: req.body.name, email: req.body.email }, // New name and email values from the request body
+//             { new: true } // Return the updated document after the update
+//         )
+//         .then(() => {
+//             console.log("Updated user information!"); // Log a message indicating a successful update
+//             return res.redirect('back'); // Redirect the user back to the previous page
+//         })
+//         .catch((error) => {
+//             console.log(`Error while updating user's information ${error}`); // Log an error message if update fails
+//             return res.status(500).send('<h1>Error in server end</h1>'); // Respond with a 500 status code for internal server error
+//         });
+//     } else {
+//         // Respond with a 401 status code indicating unauthorized access
+//         return res.status(401).send('<h1>Unauthorized</h1>');
+//     }
+// }
+
 module.exports.updateProfile = async (req, res) => {
     const userId = req.params.id; // Extract the user ID from the request parameters
 
     // Check if the requesting user's ID matches the provided user ID
     if (req.user.id == userId) {
-        // Use the Mongoose method to update the user's information by their ID
-        await User.findByIdAndUpdate(
-            userId, // User's ID to identify the document to update
-            { name: req.body.name, email: req.body.email }, // New name and email values from the request body
-            { new: true } // Return the updated document after the update
-        )
-        .then(() => {
-            console.log("Updated user information!"); // Log a message indicating a successful update
-            return res.redirect('back'); // Redirect the user back to the previous page
-        })
-        .catch((error) => {
-            console.log(`Error while updating user's information ${error}`); // Log an error message if update fails
-            return res.status(500).send('<h1>Error in server end</h1>'); // Respond with a 500 status code for internal server error
-        });
+        try {
+            // Find the user by their ID in the database
+            let user = await User.findById(userId);
+
+            // Use the uploadedAvatar middleware to handle the file upload
+            User.uploadedAvatar(req, res, (err) => {
+                if (err) {
+                    console.log('******Multer Error!', err);
+                }
+
+                // Update user's name and email based on the submitted form data
+                user.name = req.body.name;
+                user.email = req.body.email;
+
+                if (req.file) {
+                    // If an avatar file was uploaded, update the user's avatar path
+                    user.avatar = User.avatarPath + '/' + req.file.filename;
+                } else {
+                    // Handle the case when no new avatar was uploaded
+                    // You might choose to keep the existing avatar or take other actions here
+                }
+                
+                user.save();
+                req.flash('success', "successfully save the user details!");
+                // Save the updated user information and redirect back to the previous page
+                return res.redirect('back');
+            });
+
+        } catch (error) {
+            console.log(error)
+            req.flash('error', error);
+            return res.redirect('back');
+        }
+
     } else {
         // Respond with a 401 status code indicating unauthorized access
         return res.status(401).send('<h1>Unauthorized</h1>');
     }
+
 }
 
 

@@ -2,11 +2,13 @@
 
 <% if(user.id == profile_user.id ) { %>
     <!-- if the user matches show the update form -->
-    <form action="/users/update/<%= profile_user.id %>" method="post">
+    <form action="/users/update/<%= profile_user.id %>" method="post" enctype="multipart/form-data">
         <label for="name">Update Your Name: </label>
         <input type="text" name="name" id="name" placeholder="Your Name" value="<%= profile_user.name %>" required>
         <label for="email">Update Your Email: </label>
         <input type="email" name="email" id="email" placeholder="Your Name" value="<%= profile_user.email %>" required>
+        <label for="avatar">Profile Image: </label>
+        <input type="file" name="avatar" id="avatar" placeholder="Profile Image">
         <input type="submit" value="Update">
     </form>
 <% } else { %> 
