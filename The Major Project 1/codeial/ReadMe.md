@@ -1332,3 +1332,20 @@ User.uploadedAvatar(req, res, (err) => {
 ```
 app.use('/uploads', express.static(__dirname + '/uploads'));
 ```
+
+### Edge Case :: Replacing an Avatar
+* Step 1: require path and fs in the controller.
+* Step 2: delete the exising avatar if the avatar exists
+```
+if (req.file) {
+    if (user.avatar){
+        // delete the exising avatar if the avatar exists
+        const existingAvatarPath = path.join(__dirname, '..', user.avatar);
+
+        if (fs.existsSync(existingAvatarPath)) {
+            // Delete the existing avatar file
+            fs.unlinkSync(existingAvatarPath);
+        }
+    }     
+}
+```

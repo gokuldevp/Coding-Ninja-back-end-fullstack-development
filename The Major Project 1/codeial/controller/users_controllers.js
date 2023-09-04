@@ -1,5 +1,7 @@
 // import the User(db) from the models folder
 const User = require('../models/user');
+const fs = require('fs');
+const path = require('path');
 
 // Render the profile page
 module.exports.profile = (req, res)=> {
@@ -63,6 +65,17 @@ module.exports.updateProfile = async (req, res) => {
 
                 if (req.file) {
                     // If an avatar file was uploaded, update the user's avatar path
+
+                    if (user.avatar){
+                        // delete the exising avatar if the avatar exists
+                        const existingAvatarPath = path.join(__dirname, '..', user.avatar);
+
+                        if (fs.existsSync(existingAvatarPath)) {
+                            // Delete the existing avatar file
+                            fs.unlinkSync(existingAvatarPath);
+                        }
+                    }                    
+
                     user.avatar = User.avatarPath + '/' + req.file.filename;
                 } else {
                     // Handle the case when no new avatar was uploaded
